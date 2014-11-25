@@ -1,2 +1,0 @@
-thinkry.github.io
-=================
