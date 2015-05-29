@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wecode latestver="1.1.7">
+	<tips>
+		tips测试
+		<tip>解决了有道云吞噬换行的问题, 老文章的换行无法找回 :(</tip>
+		<tip>提高了程序稳定性，修复了一些bug</tip>
+	</tips>
+	<download url="http://wecode.thinkry.com/download/wecode1.1.7.exe"></download>
+</wecode>
