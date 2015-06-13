@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <wecode>
-	<version latestver="1.1.7"></version>
-	<download url="http://wecode.thinkry.com/download/wecode1.1.7.exe"></download>
+	<version latestver="1.1.8"></version>
+	<download url="http://wecode.thinkry.com/download/wecode1.1.8.exe"></download>
 	<tips>
 		<tip>解决了有道云吞噬换行的问题, 老文章的换行无法找回 :(</tip>
 		<tip>提高了程序稳定性，修复了一些bug</tip>
