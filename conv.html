@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>WeCode有道云内容解码</title>
+    <style type="text/css">
+        body {font-family: 'PingFangSC-Light', 'helvetica neue', 'hiragino sans gb', 'tahoma', 'microsoft yahei ui', 'microsoft yahei', 'simsun', 'sans-serif'; font-size: 13px; margin: 0; padding: 0;}
+        .content {height: 800px; width: 1200px; margin: 40px auto; display: flex; flex-direction: column;}
+        .content-header {margin-bottom: 20px;}
+        .content-body {flex: 1; display: flex; flex-direction: row;}
+        .content-body-left {flex: 1; padding-right: 10px; display: flex; flex-direction: column;}
+        .content-body-left div,
+        .content-body-right div {flex: 1; width: 100%;}
+        .content-body-right {flex: 1; padding-left: 10px; display: flex; flex-direction: column;}
+        textarea {width: 100%; height: 100%; border: 1px solid #ccc; margin: 0; padding: 0; border-radius: 4px; resize: none;}
+        .content-footer {margin-top: 20px; height: 30px; text-align: center;}
+        .content-footer button {min-width: 80px; height: 30px;}
+        #msg {display: block; margin-top: 5px;}
+    </style>
+    <script type="text/javascript" src="js/encoding-indexes.js"></script>
+    <script type="text/javascript" src="js/encoding.js"></script>
+    <script type="text/javascript" src="js/clipboard.min.js"></script>
+    <script type="text/javascript">
+        function base64ToUint6(nChr) {
+            return nChr > 64 && nChr < 91 ?
+            nChr - 65
+                    : nChr > 96 && nChr < 123 ?
+            nChr - 71
+                    : nChr > 47 && nChr < 58 ?
+            nChr + 4
+                    : nChr === 43 ?
+                    62
+                    : nChr === 47 ?
+                    63
+                    :
+                    0;
+        }
+
+        function base64ToUint8Array(input) {
+            var sB64Enc = input.replace(/[^A-Za-z0-9\+\/]/g, "");
+            var nInLen = sB64Enc.length;
+            var nOutLen = nInLen * 3 + 1 >> 2;
+            var taBytes = new Uint8Array(nOutLen);
+
+            for (var nMod3, nMod4, nUint24 = 0, nOutIdx = 0, nInIdx = 0; nInIdx < nInLen; nInIdx++) {
+                nMod4 = nInIdx & 3;
+                nUint24 |= base64ToUint6(sB64Enc.charCodeAt(nInIdx)) << 18 - 6 * nMod4;
+                if (nMod4 === 3 || nInLen - nInIdx === 1) {
+                    for (nMod3 = 0; nMod3 < 3 && nOutIdx < nOutLen; nMod3++, nOutIdx++) {
+                        taBytes[nOutIdx] = nUint24 >>> (16 >>> nMod3 & 24) & 255;
+                    }
+                    nUint24 = 0;
+                }
+            }
+
+            return taBytes;
+        }
+
+        function conv() {
+            var msg = document.getElementById('msg');
+            msg.innerText = '';
+
+            var src = document.getElementById('src');
+            var dst = document.getElementById('dst');
+            var b = base64ToUint8Array(src.value);
+            dst.value = new TextDecoder('gb18030').decode(b);
+
+            var clipboard = new Clipboard(".btn");
+            clipboard.on('success', function(e) {
+                msg.innerText = '复制成功';
+            });
+            clipboard.on('error', function(e) {
+                msg.innerText = '复制失败';
+            });
+        }
+    </script>
+</head>
+
+<body>
+<div class="content">
+    <div class="content-header">
+        <h2>WeCode有道云内容解码</h2>
+        <p>WeCode的云笔记部分使用有道云笔记开放平台，内容存放在有道云的wecode和wecodenote目录。目前有道云笔记的开放平台的登录模块有问题，导致WeCode无法登录，给用户造成困扰，深表歉意。</p>
+        <p>本工具用于把有道云笔记的编码内容解码出来，方便把资料转移出来。</p>
+    </div>
+    <div class="content-body">
+        <div class="content-body-left">
+            <span>需要解码的内容</span>
+            <div>
+                <textarea id="src" autofocus></textarea>
+            </div>
+        </div>
+        <div class="content-body-right">
+            <span>解码后的内容会显示在这里</span>
+            <div>
+                <textarea id="dst" readonly></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="content-footer">
+        <button class="btn"  onclick="conv()" data-clipboard-target="#dst">解码内容，并复制到剪贴板</button><span id="msg"></span>
+    </div>
+</div>
+</body>
+
+</html>
