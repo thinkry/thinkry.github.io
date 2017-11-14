@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wecode>
+    <version latestver="1.1.9"></version>
+    <download url="http://thinkry.github.io/download/wecode1.1.9.exe"></download>
+    <tips>
+        <tip>修复了有道云无法登录的问题</tip>
+    </tips>
+</wecode>
